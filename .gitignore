@@ -1,0 +1,19 @@
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.env
+.session_cookies.json
+
+# Data files (optional - uncomment to track data)
+data/raw/*.json
+data/raw/*.jsonl
+data/exports/*.csv
+data/exports/*.txt
+data/exports/*.json
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
