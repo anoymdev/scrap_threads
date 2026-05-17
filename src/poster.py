@@ -79,7 +79,9 @@ class ThreadsPoster(ThreadsScraper):
                 # Focus the text area
                 editor_selectors = [
                     "div[contenteditable='true'][role='textbox']",
-                    "textarea[placeholder*='Start a thread']",
+                    "div[contenteditable='true']",
+                    "div[role='textbox'][aria-label*='thread' i]",
+                    "div[role='textbox'][aria-label*='utas' i]",
                 ]
                 
                 editor = None
