@@ -31,9 +31,6 @@ class Config:
     THREADS_USERNAME = os.getenv("THREADS_USERNAME", None)
     THREADS_PASSWORD = os.getenv("THREADS_PASSWORD", None)
 
-    # AI API Keys
-    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", None)
-
     # Logging
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 

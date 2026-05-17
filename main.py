@@ -445,8 +445,9 @@ def generate_content(
     data_file: str = typer.Argument(..., help="Path to raw scraped data JSON"),
     num: int = typer.Option(3, "--num", "-n", help="Number of posts to generate"),
     topic: Optional[str] = typer.Option(None, "--topic", "-t", help="Specific topic to focus on"),
+    headless: bool = typer.Option(False, "--headless/--no-headless", help="Run browser in headless mode"),
 ):
-    """Generate new Threads content based on scraped trends using Gemini AI."""
+    """Generate new Threads content based on scraped trends using Gemini Web UI via Playwright."""
     _print_banner()
     
     report_path = Path(report_file)
@@ -457,8 +458,8 @@ def generate_content(
         raise typer.Exit(1)
         
     try:
-        generator = ContentGenerator()
-        with console.status("[bold cyan]🤖 AI is generating posts...[/bold cyan]"):
+        generator = ContentGenerator(headless=headless)
+        with console.status("[bold cyan]🤖 AI is generating posts via browser...[/bold cyan]"):
             posts = generator.generate_posts(report_path, data_path, num_posts=num, topic=topic)
             
         if not posts:

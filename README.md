@@ -12,7 +12,7 @@ This tool extracts data via GraphQL response interception with a seamless fallba
 - **Profile Scraping**: Extract posts from public Threads accounts.
 - **Keyword & Hashtag Scraping**: Discover posts matching specific topics or trends.
 - **Home Feed Scraping**: Collect the latest trending content directly from the "For You" and "Following" timelines.
-- **AI Content Generator**: Automatically draft new, culturally relevant posts based on trending topics and local language styles using the Gemini API.
+- **AI Content Generator**: Automatically draft new, culturally relevant posts based on trending topics and local language styles by automating the **Gemini Web UI** (no API key required!).
 - **Auto-Poster**: Automate the publishing of generated text to your Threads account via Playwright.
 - **Session Persistence**: Securely save login cookies to reduce redundant authentications and bypass strict anti-bot measures.
 - **Batch Processing**: Scrape multiple profiles or keywords concurrently.
@@ -23,7 +23,7 @@ This tool extracts data via GraphQL response interception with a seamless fallba
 
 - Python 3.10 or higher
 - Chromium browser (installed automatically via Playwright)
-- Google Gemini API Key (optional, for AI content generation)
+- A Google account (to log into Gemini Web UI on the first run)
 
 ## 🛠️ Installation
 
@@ -68,9 +68,6 @@ HEADLESS=true
 THREADS_USERNAME=your_username
 THREADS_PASSWORD=your_password
 
-# AI Integration
-GEMINI_API_KEY=your_gemini_api_key
-
 # Optional Proxy
 # PROXY_URL=http://host:port
 ```
@@ -103,9 +100,9 @@ python main.py keywords "#trending,#viral,#news" --max-each 50 --report
 
 ### 4. Generate AI Content
 Create new draft posts imitating the scraped trending topics and language style.
-*(Requires `GEMINI_API_KEY` in `.env`)*
+*(Automates the Gemini Web UI. A browser will open for you to log in on the first run).*
 ```bash
-python main.py generate data/exports/report_20260517.json data/raw/threads_20260517.json --num 3
+python main.py generate data/exports/report_20260517.json data/raw/threads_20260517.json --num 3 --no-headless
 ```
 
 ### 5. Auto-Post to Threads
