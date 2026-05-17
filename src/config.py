@@ -35,6 +35,8 @@ class Config:
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
     # Browser
+    BROWSER_TYPE = os.getenv("BROWSER_TYPE", "chromium") # chromium, firefox, webkit
+    BROWSER_CHANNEL = os.getenv("BROWSER_CHANNEL", None) # chrome, msedge (only for chromium)
     USER_AGENT = (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "

@@ -50,45 +50,37 @@ class ContentGenerator:
             if len(post["text"]) > 20:
                 sample_posts.append(post["text"])
 
-        prompt = f"""
-Kamu adalah seorang content creator di platform Threads (seperti Twitter).
-Tugasmu adalah membuat draft postingan baru berbahasa Indonesia yang organik, natural, dan menarik.
+        prompt_path = config.BASE_DIR / "prompts" / "content_generation.txt"
+        try:
+            with open(prompt_path, 'r', encoding='utf-8') as f:
+                prompt_template = f.read()
+        except FileNotFoundError:
+            logger.error(f"❌ Prompt template not found at {prompt_path}")
+            raise
 
-Berikut adalah topik-topik yang SEDANG TRENDING di timeline saat ini:
-{', '.join(trending_topics)}
-
-Berikut adalah contoh GAYA BAHASA dari postingan yang sedang ramai:
----
-{chr(10).join(f"- {text}" for text in sample_posts[:5])}
----
-
-Instruksi:
-1. Buat {num_posts} draft postingan terpisah.
-2. Gunakan gaya bahasa kasual, asik, ala anak Threads/Twitter Indonesia (bisa pakai kata ganti aku/kamu, atau lo/gue tergantung contoh gaya bahasanya).
-3. Postingan TIDAK BOLEH kaku seperti robot AI. Harus senatural mungkin.
-4. Jangan terlalu banyak pakai emoji (cukup 1 atau 2 jika perlu).
-5. Jangan pakai hashtag (#) di setiap postingan kecuali sangat natural.
-"""
+        topic_instruction = f"6. Focus the discussion specifically on this topic: {topic}" if topic else "6. Draw inspiration from the trending topics above for your content."
         
-        if topic:
-            prompt += f"\n6. Fokuskan pembahasannya pada topik spesifik ini: {topic}"
-        else:
-            prompt += "\n6. Ambil inspirasi dari topik-topik trending di atas untuk bahan postingannya."
-            
-        prompt += """\n
-Output Format:
-Hanya keluarkan teks postingan saja tanpa salam atau penutup. Pisahkan setiap postingan HANYA dengan pembatas "---".
-"""
+        prompt = prompt_template.format(
+            trending_topics=', '.join(trending_topics),
+            sample_posts=chr(10).join(f"- {text}" for text in sample_posts[:5]),
+            num_posts=num_posts,
+            topic_instruction=topic_instruction
+        )
 
         logger.info("Launching browser for Gemini automation...")
         
         with sync_playwright() as p:
             # Use launch_persistent_context to keep the login session active
-            browser = p.chromium.launch_persistent_context(
-                user_data_dir=str(self.user_data_dir),
-                headless=self.headless,
-                args=["--disable-blink-features=AutomationControlled"]
-            )
+            launch_opts = {
+                "user_data_dir": str(self.user_data_dir),
+                "headless": self.headless,
+                "args": ["--disable-blink-features=AutomationControlled"]
+            }
+            if config.BROWSER_CHANNEL:
+                launch_opts["channel"] = config.BROWSER_CHANNEL
+                
+            browser_type = getattr(p, config.BROWSER_TYPE)
+            browser = browser_type.launch_persistent_context(**launch_opts)
             
             # Close extra default pages
             if len(browser.pages) > 1:

@@ -68,8 +68,12 @@ class ThreadsScraper:
         }
         if self.proxy:
             launch_opts["proxy"] = {"server": self.proxy}
+            
+        if config.BROWSER_CHANNEL:
+            launch_opts["channel"] = config.BROWSER_CHANNEL
 
-        self._browser = playwright.chromium.launch(**launch_opts)
+        browser_type = getattr(playwright, config.BROWSER_TYPE)
+        self._browser = browser_type.launch(**launch_opts)
 
         context_opts: Dict[str, Any] = {
             "user_agent": config.USER_AGENT,
